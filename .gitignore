@@ -1,0 +1,8 @@
+__pycache__
+.pytest_cache
+*.egg-info
+timer.dat
+sandbox
+*.out
+*.hdf5
+*.clean
