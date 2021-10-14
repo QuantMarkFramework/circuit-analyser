@@ -4,6 +4,11 @@ from sympy import Symbol
 import tequila as tq
 from analyser.translate import tequila_to_tket
 from pytket import Circuit
+from pytket.circuit import Pauli, PauliExpBox
+
+# Missing tests
+# test pregiven variables, also behaviour with object
+# maybe some kind of test for compile
 
 
 def s(name):
@@ -63,3 +68,19 @@ class TestTequilaToTket(unittest.TestCase):
 
 		c: Circuit = Circuit(3).SWAP(0, 1).CSWAP(0, 1, 2)
 		self.assertEqual(c, result)
+
+	def test_exp_pauli_gate(self):
+		tq_paulistring: tq.PauliString = tq.PauliString({0: 'X', 2: 'Y'}, coeff=0.5)
+		circuit: tq.QCircuit = tq.gates.ExpPauli(tq_paulistring, 0.5 * np.pi)
+		result: Circuit = tequila_to_tket(circuit=circuit)
+
+		pbox: PauliExpBox = PauliExpBox([Pauli.X, Pauli.Y], 0.25)
+		c: Circuit = Circuit(3).add_pauliexpbox(pbox, [0, 2])
+
+		# pytket does not seem to have PauliExpBox comaring implemeted
+		c_com = c.get_commands()[0]
+		res_com = result.get_commands()[0]
+
+		self.assertEqual(c_com.op.get_paulis(), c_com.op.get_paulis())
+		self.assertEqual(res_com.op.get_phase(), res_com.op.get_phase())
+		self.assertEqual(c_com.qubits, res_com.qubits)
