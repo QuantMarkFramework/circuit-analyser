@@ -4,12 +4,17 @@ import typing
 import tequila as tq
 from analyser.translate import tequila_to_tket
 from pytket.routing import Architecture
-from pytket.passes import DefaultMappingPass, RebaseTket, SequencePass, RepeatPass
-from pytket.predicates import CompilationUnit
+from pytket.passes import FullPeepholeOptimise, DefaultMappingPass, RebaseTket
+from pytket.passes import SequencePass
+from pytket.predicates import CompilationUnit, GateSetPredicate, ConnectivityPredicate
 from pytket.circuit import OpType
 from functools import reduce
 import random
 import numpy as np
+
+
+class AnalyseError(Exception):
+	pass
 
 
 @dataclass
@@ -36,24 +41,32 @@ def analyse(
 		tket_circuit = tequila_to_tket(circuit, compile=True)
 	if architecture:
 		seqpass = SequencePass([
+			RebaseTket(),
+			FullPeepholeOptimise(),
 			DefaultMappingPass(architecture),
-			RebaseTket(architecture)
+			RebaseTket(),
 		])
 	else:
 		seqpass = SequencePass([
-			RebaseTket()
+			RebaseTket(),
+			FullPeepholeOptimise(),
+			RebaseTket(),
 		])
-	reppass = RepeatPass(seqpass)
 	for _ in range(runs):
 		if give_values:
 			variables = {v: random.uniform(0, 2 * np.pi) for v in circuit.extract_variables()}
 			tket_circuit = tequila_to_tket(circuit, variables, compile=True)
 		cu = CompilationUnit(tket_circuit)
-		reppass.apply(cu)
+		seqpass.apply(cu)
 		outcome = cu.circuit
+		if not GateSetPredicate({OpType.CX, OpType.TK1}).verify(outcome):
+			raise AnalyseError("Resulting circuit has wrong gates. Most likely not a user error.")
+		if architecture and not ConnectivityPredicate(architecture).verify(outcome):
+			raise AnalyseError("Resulting circuit has wrong gates. Most likely not a user error.")
 		results.append(Result(
 			gate_depth=outcome.depth_by_type(OpType.CX),
 			gate_count=reduce(cx_counter, outcome, 0),
 			parameter_count=len(list(circuit.make_parameter_map().keys())),
 		))
+
 	return CircuitAnalytics(results)
