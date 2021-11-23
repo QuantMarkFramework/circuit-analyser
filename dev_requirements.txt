@@ -2,3 +2,4 @@ setuptools
 pytest
 flake8
 tequila-basic
+pytket
