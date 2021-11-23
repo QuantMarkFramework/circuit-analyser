@@ -19,6 +19,7 @@ class AnalyseError(Exception):
 
 @dataclass
 class Result:
+	qubit_count: int
 	gate_depth: int
 	gate_count: int
 	parameter_count: int
@@ -64,6 +65,7 @@ def analyse(
 		if architecture and not ConnectivityPredicate(architecture).verify(outcome):
 			raise AnalyseError("Resulting circuit has wrong gates. Most likely not a user error.")
 		results.append(Result(
+			qubit_count=outcome.n_qubits,
 			gate_depth=outcome.depth_by_type(OpType.CX),
 			gate_count=reduce(cx_counter, outcome, 0),
 			parameter_count=len(list(circuit.make_parameter_map().keys())),
