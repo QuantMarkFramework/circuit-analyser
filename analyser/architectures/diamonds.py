@@ -9,7 +9,7 @@ def diamonds(qubits: int, aslist: bool = False):
 	dimensiona larray. There are always n * n diamonds so that there are enough
 	qubits.
 
-	This is similar to the architectuer used on Googles Sycamore processor. 
+	This is similar to the architectuer used on Googles Sycamore processor.
 	"""
 	connections: typing.List[typing.Tuple[int, int]] = []
 	n = math.ceil((1 - math.sqrt(1 + 2 * qubits)) / -2)
