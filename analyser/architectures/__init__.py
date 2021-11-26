@@ -4,3 +4,4 @@ from analyser.architectures.octagons import octagons
 from analyser.architectures.diamonds import diamonds
 from analyser.architectures.square_grid import square_grid
 from analyser.architectures.circle import circle
+from analyser.architectures.big_hexagons import big_hexagons
