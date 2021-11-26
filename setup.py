@@ -9,7 +9,7 @@ def read_requirements(filename):
 setup(
 	name='analyser',
 	packages=find_packages(),
-	version='0.0.0',
+	version='0.0.1',
 	description='A python library for analysing quantum circuits.',
 	license='MIT',
 	install_requires=read_requirements('requirements.txt'),
