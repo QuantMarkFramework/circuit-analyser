@@ -18,7 +18,10 @@ def big_hexagons(qubits: int, aslist: bool = False):
 		connections.append((i, i + 1))
 		if (i % 4) == 0:
 			jump: int = (4 * n) + 1 + (i // 4)
-			to: int = (5 * n) + 4 + i
+			if n == 1:
+				to: int = 7
+			else:
+				to: int = (5 * n) + 4 + i
 			connections.append((i, jump))
 			connections.append((jump, to))
 
