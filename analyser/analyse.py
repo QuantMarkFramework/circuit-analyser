@@ -5,7 +5,7 @@ import tequila as tq
 from analyser.translate import tequila_to_tket
 from pytket.routing import Architecture
 from pytket.passes import FullPeepholeOptimise, DefaultMappingPass, RebaseTket
-from pytket.passes import SequencePass
+from pytket.passes import SequencePass, DecomposeBoxes
 from pytket.predicates import CompilationUnit, GateSetPredicate, ConnectivityPredicate
 from pytket.circuit import OpType
 from functools import reduce
@@ -42,14 +42,14 @@ def analyse(
 		tket_circuit = tequila_to_tket(circuit, compile=True)
 	if architecture:
 		seqpass = SequencePass([
-			RebaseTket(),
+			DecomposeBoxes(),
 			FullPeepholeOptimise(),
 			DefaultMappingPass(architecture),
 			RebaseTket(),
 		])
 	else:
 		seqpass = SequencePass([
-			RebaseTket(),
+			DecomposeBoxes(),
 			FullPeepholeOptimise(),
 			RebaseTket(),
 		])
