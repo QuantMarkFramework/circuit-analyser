@@ -3,15 +3,21 @@ from pytket.routing import Architecture
 import math
 
 
-def big_hexagons(qubits: int, aslist: bool = False):
+def big_hexagons(qubits: int = 0, n: int = 0, aslist: bool = False):
 	"""
 	Creates a 2d grid with n * n hexagons that have 2 connection long sides.
-	n is selected so that there are enough qubits.
+	n is selected so that there are enough qubits. You can give qubit count or n
+	as a parameter.
 
 	This is follows the heavy-hex architecture that is used by IBM.
 	"""
+	if qubits and n:
+		raise ValueError("Must give either qubits count or n. Not both.")
+	if not qubits and not n:
+		raise ValueError("Must give either qubits count or n.")
 	connections: typing.List[typing.Tuple[int, int]] = []
-	n: int = math.ceil((-8 + math.sqrt(84 + (20 * qubits))) / 10)
+	if qubits:
+		n: int = math.ceil((-8 + math.sqrt(84 + (20 * qubits))) / 10)
 
 	# first row and n first connections to second
 	for i in range((4 * n)):

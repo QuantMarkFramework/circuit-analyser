@@ -24,14 +24,19 @@ class Octagon:
 		return (6 + self.offset, 7 + self.offset)
 
 
-def octagons(qubits: int, aslist: bool = False) -> Architecture:
+def octagons(qubits: int = 0, n: int = 0, aslist: bool = False) -> Architecture:
 	"""
 	Creates octagons (like in Rigettis Apen-9) and connects them in a 2
 	dimensional grit. There are always n x n octagons, where n^2 * 8 is greater
-	than the given qubit count.
+	than the given qubit count. You can give qubit count or n as a parameter.
 	"""
+	if qubits and n:
+		raise ValueError("Must give either qubits count or n. Not both.")
+	if not qubits and not n:
+		raise ValueError("Must give either qubits count or n.")
 	connections: typing.List[typing.Tuple[int, int]] = []
-	n = math.ceil(math.sqrt(math.ceil(qubits / 8)))
+	if qubits:
+		n = math.ceil(math.sqrt(math.ceil(qubits / 8)))
 	identifier = 0
 	octagons: typing.List[typing.List[Octagon]] = []
 

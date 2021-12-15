@@ -5,7 +5,7 @@ from analyser.architectures import diamonds
 class TestDiamonds(unittest.TestCase):
 	def test_1_qubit(self):
 		correct = [(1, 0), (2, 0), (3, 1), (3, 2)]
-		self.assertEqual(sorted(diamonds(1, True)), sorted(correct))
+		self.assertEqual(sorted(diamonds(1, aslist=True)), sorted(correct))
 
 	def test_10_qubits(self):
 		l1 = [(2, 0), (3, 0), (3, 1), (4, 1)]
@@ -13,7 +13,7 @@ class TestDiamonds(unittest.TestCase):
 		l3 = [(7, 5), (8, 5), (8, 6), (9, 6)]
 		l4 = [(10, 7), (10, 8), (11, 8), (11, 9)]
 		correct = [*l1, *l2, *l3, *l4]
-		self.assertEqual(sorted(diamonds(10, True)), sorted(correct))
+		self.assertEqual(sorted(diamonds(10, aslist=True)), sorted(correct))
 
 	def test_20_qubits(self):
 		l1 = [(3, 0), (4, 0), (4, 1), (5, 1), (5, 2), (6, 2)]
@@ -23,4 +23,12 @@ class TestDiamonds(unittest.TestCase):
 		l5 = [(17, 14), (18, 14), (18, 15), (19, 15), (19, 16), (20, 16)]
 		l6 = [(21, 17), (21, 18), (22, 18), (22, 19), (23, 19), (23, 20)]
 		correct = [*l1, *l2, *l3, *l4, *l5, *l6]
-		self.assertEqual(sorted(diamonds(20, True)), sorted(correct))
+		self.assertEqual(sorted(diamonds(20, aslist=True)), sorted(correct))
+
+	def test_n_as_parameter(self):
+		l1 = [(2, 0), (3, 0), (3, 1), (4, 1)]
+		l2 = [(5, 2), (5, 3), (6, 3), (6, 4)]
+		l3 = [(7, 5), (8, 5), (8, 6), (9, 6)]
+		l4 = [(10, 7), (10, 8), (11, 8), (11, 9)]
+		correct = [*l1, *l2, *l3, *l4]
+		self.assertEqual(sorted(diamonds(n=2, aslist=True)), sorted(correct))

@@ -3,16 +3,21 @@ from pytket.routing import Architecture
 import math
 
 
-def diamonds(qubits: int, aslist: bool = False):
+def diamonds(qubits: int = 0, n: int = 0, aslist: bool = False):
 	"""
 	Creates an architecture where the connections create diamonds in an 2
 	dimensiona larray. There are always n * n diamonds so that there are enough
-	qubits.
+	qubits. You can give qubit count or n as a parameter.
 
 	This is similar to the architectuer used on Googles Sycamore processor.
 	"""
+	if qubits and n:
+		raise ValueError("Must give either qubits count or n. Not both.")
+	if not qubits and not n:
+		raise ValueError("Must give either qubits count or n.")
 	connections: typing.List[typing.Tuple[int, int]] = []
-	n = math.ceil((1 - math.sqrt(1 + 2 * qubits)) / -2)
+	if qubits:
+		n = math.ceil((1 - math.sqrt(1 + 2 * qubits)) / -2)
 	node = n
 	for layer in range(2 * n):
 		if not layer % 2:

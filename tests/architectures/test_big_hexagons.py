@@ -8,7 +8,7 @@ class TestBigHexagons(unittest.TestCase):
 		r2 = [(7, 8), (8, 9), (9, 10), (10, 11)]
 		b1 = [(0, 5), (5, 7), (4, 6), (6, 11)]
 		correct = [*r1, *r2, *b1]
-		self.assertEqual(sorted(big_hexagons(1, True)), sorted(correct))
+		self.assertEqual(sorted(big_hexagons(1, aslist=True)), sorted(correct))
 
 	def test_30_qubits(self):
 		r1 = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8)]
@@ -18,7 +18,7 @@ class TestBigHexagons(unittest.TestCase):
 		b1 = [(0, 9), (9, 14), (4, 10), (10, 18), (8, 11), (11, 22)]
 		b2 = [(12, 23), (23, 26), (16, 24), (24, 30), (20, 25), (25, 34)]
 		correct = [*r1, *r2a, *r2b, *r3, *b1, *b2]
-		self.assertEqual(sorted(big_hexagons(30, True)), sorted(correct))
+		self.assertEqual(sorted(big_hexagons(30, aslist=True)), sorted(correct))
 
 	def test_68_qbuits(self):
 		r1a = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8)]
@@ -33,4 +33,14 @@ class TestBigHexagons(unittest.TestCase):
 		b2 = [(17, 32), (32, 36), (21, 33), (33, 40), (25, 34), (34, 44), (29, 35), (35, 48)]
 		b3 = [(38, 51), (51, 55), (42, 52), (52, 59), (46, 53), (53, 63), (50, 54), (54, 67)]
 		correct = [*r1a, *r1b, *r2a, *r2b, *r3a, *r3b, *r4a, *r4b, *b1, *b2, *b3]
-		self.assertEqual(sorted(big_hexagons(68, True)), sorted(correct))
+		self.assertEqual(sorted(big_hexagons(68, aslist=True)), sorted(correct))
+
+	def test_n_as_parameter(self):
+		r1 = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8)]
+		r2a = [(12, 13), (13, 14), (14, 15), (15, 16), (16, 17), (17, 18), (18, 19), (19, 20)]
+		r2b = [(20, 21), (21, 22)]
+		r3 = [(26, 27), (27, 28), (28, 29), (29, 30), (30, 31), (31, 32), (32, 33), (33, 34)]
+		b1 = [(0, 9), (9, 14), (4, 10), (10, 18), (8, 11), (11, 22)]
+		b2 = [(12, 23), (23, 26), (16, 24), (24, 30), (20, 25), (25, 34)]
+		correct = [*r1, *r2a, *r2b, *r3, *b1, *b2]
+		self.assertEqual(sorted(big_hexagons(n=2, aslist=True)), sorted(correct))
