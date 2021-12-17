@@ -1,20 +1,26 @@
 import typing
 from pytket.routing import Architecture
+from analyser.architectures._common_parts import test_input, exact_qubit_count
 import math
 
 
-def big_hexagons(qubits: int = 0, n: int = 0, aslist: bool = False):
+def big_hexagons(
+	qubits: int = 0,
+	n: int = 0,
+	aslist: bool = False,
+	exact: bool = False
+) -> Architecture:
 	"""
 	Creates a 2d grid with n * n hexagons that have 2 connection long sides.
 	n is selected so that there are enough qubits. You can give qubit count or n
 	as a parameter.
 
-	This is follows the heavy-hex architecture that is used by IBM.
+	When exact is used, qubits are removed from one side, till the exact qubit
+	count is achieved.
+
+	This is similar to the heavy-hex architecture that is used by IBM.
 	"""
-	if qubits and n:
-		raise ValueError("Must give either qubits count or n. Not both.")
-	if not qubits and not n:
-		raise ValueError("Must give either qubits count or n.")
+	test_input(qubits, n, exact)
 	connections: typing.List[typing.Tuple[int, int]] = []
 	if qubits:
 		n: int = math.ceil((-8 + math.sqrt(84 + (20 * qubits))) / 10)
@@ -63,6 +69,10 @@ def big_hexagons(qubits: int = 0, n: int = 0, aslist: bool = False):
 	last_start: int = ((5 * n) * n) + (4 * n) - 2
 	for i in range((4 * n)):
 		connections.append((last_start + i, last_start + i + 1))
+
+	if exact:
+		connections = exact_qubit_count(qubits, connections)
+
 	if aslist:
 		return connections
 

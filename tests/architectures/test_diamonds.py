@@ -32,3 +32,9 @@ class TestDiamonds(unittest.TestCase):
 		l4 = [(10, 7), (10, 8), (11, 8), (11, 9)]
 		correct = [*l1, *l2, *l3, *l4]
 		self.assertEqual(sorted(diamonds(n=2, aslist=True)), sorted(correct))
+
+	def test_exact_true(self):
+		l1 = [(2, 0), (3, 0), (3, 1), (4, 1), (5, 2), (5, 3), (6, 3), (6, 4)]
+		l3 = [(7, 5), (8, 5), (8, 6)]
+		correct = [*l1, *l3]
+		self.assertEqual(sorted(diamonds(9, aslist=True, exact=True)), sorted(correct))

@@ -44,3 +44,7 @@ class TestBigHexagons(unittest.TestCase):
 		b2 = [(12, 23), (23, 26), (16, 24), (24, 30), (20, 25), (25, 34)]
 		correct = [*r1, *r2a, *r2b, *r3, *b1, *b2]
 		self.assertEqual(sorted(big_hexagons(n=2, aslist=True)), sorted(correct))
+
+	def test_exact_true(self):
+		correct = [(0, 1), (1, 2), (2, 3), (3, 4), (0, 5)]
+		self.assertEqual(sorted(big_hexagons(6, aslist=True, exact=True)), sorted(correct))

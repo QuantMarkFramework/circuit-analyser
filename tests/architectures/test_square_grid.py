@@ -26,3 +26,9 @@ class TestSquareGrid(unittest.TestCase):
 		col34 = [(2, 6), (6, 10), (10, 14), (3, 7), (7, 11), (11, 15)]
 		correct = [*row12, *row23, *col12, *col34]
 		self.assertEqual(sorted(square_grid(n=4, aslist=True)), sorted(correct))
+
+	def test_exact_true(self):
+		rows = [(0, 1), (1, 2), (2, 3), (4, 5), (5, 6), (6, 7), (8, 9)]
+		cols = [(0, 4), (4, 8), (1, 5), (5, 9), (2, 6), (3, 7)]
+		correct = [*rows, *cols]
+		self.assertEqual(sorted(square_grid(10, aslist=True, exact=True)), sorted(correct))

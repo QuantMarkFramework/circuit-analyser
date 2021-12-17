@@ -1,5 +1,6 @@
 import typing
 from pytket.routing import Architecture
+from analyser.architectures._common_parts import test_input, exact_qubit_count
 import math
 
 
@@ -24,16 +25,21 @@ class Octagon:
 		return (6 + self.offset, 7 + self.offset)
 
 
-def octagons(qubits: int = 0, n: int = 0, aslist: bool = False) -> Architecture:
+def octagons(
+	qubits: int = 0,
+	n: int = 0,
+	aslist: bool = False,
+	exact: bool = False
+) -> Architecture:
 	"""
 	Creates octagons (like in Rigettis Apen-9) and connects them in a 2
 	dimensional grit. There are always n x n octagons, where n^2 * 8 is greater
 	than the given qubit count. You can give qubit count or n as a parameter.
+
+	When exact is used, qubits are removed from one side, till the exact qubit
+	count is achieved.
 	"""
-	if qubits and n:
-		raise ValueError("Must give either qubits count or n. Not both.")
-	if not qubits and not n:
-		raise ValueError("Must give either qubits count or n.")
+	test_input(qubits, n, exact)
 	connections: typing.List[typing.Tuple[int, int]] = []
 	if qubits:
 		n = math.ceil(math.sqrt(math.ceil(qubits / 8)))
@@ -60,6 +66,9 @@ def octagons(qubits: int = 0, n: int = 0, aslist: bool = False) -> Architecture:
 			bottom1, bottom2 = octagons[y][x].bottom()
 			top2, top1 = octagons[y + 1][x].top()
 			connections.extend([(bottom1, top1), (bottom2, top2)])
+
+	if exact:
+		connections = exact_qubit_count(qubits, connections)
 
 	if aslist:
 		return connections

@@ -24,3 +24,10 @@ class TestOctagons(unittest.TestCase):
 		con = [(2, 15), (3, 14), (18, 31), (19, 30), (5, 16), (4, 17), (13, 24), (12, 25)]
 		correct = [*oct1, *oct2, *oct3, *oct4, *con]
 		self.assertEqual(sorted(octagons(n=2, aslist=True)), sorted(correct))
+
+	def test_exact_true(self):
+		oct1 = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 0)]
+		oct2 = [(8, 9), (9, 10), (10, 11), (11, 12), (12, 13), (13, 14), (14, 15), (15, 8)]
+		con = [(2, 15), (3, 14)]
+		correct = [*oct1, *oct2, *con]
+		self.assertEqual(sorted(octagons(16, aslist=True, exact=True)), sorted(correct))
