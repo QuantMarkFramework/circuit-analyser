@@ -85,7 +85,6 @@ def analyse(
 		raise AnalyseError("Resulting circuit has wrong gates. Most likely not a user error.")
 	if not NoMidMeasurePredicate().verify(outcome):
 		raise AnalyseError("Resulting circuit has mid measures. Most likely not a user error.")
-	print(list(outcome))
 	return CircuitAnalytics(
 		qubit_count=outcome.n_qubits,
 		gate_depth=outcome.depth_by_type(OpType.CX),
