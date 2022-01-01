@@ -25,6 +25,20 @@ class Octagon:
 		return (6 + self.offset, 7 + self.offset)
 
 
+class SideStartOctagon(Octagon):
+	def left(self) -> typing.Tuple[int, int]:
+		return (self.offset, 1 + self.offset)
+
+	def top(self) -> typing.Tuple[int, int]:
+		return (2 + self.offset, 3 + self.offset)
+
+	def right(self) -> typing.Tuple[int, int]:
+		return (4 + self.offset, 5 + self.offset)
+
+	def bottom(self) -> typing.Tuple[int, int]:
+		return (6 + self.offset, 7 + self.offset)
+
+
 def octagons(
 	qubits: int = 0,
 	n: int = 0,
@@ -47,11 +61,12 @@ def octagons(
 		n = math.ceil(math.sqrt(math.ceil(qubits / 8)))
 	identifier = 0
 	octagons: typing.List[typing.List[Octagon]] = []
+	octagon_class = SideStartOctagon if exact and qubits > 8 and qubits < 16 else Octagon
 
 	for _ in range(n):
 		row = []
 		for _ in range(n):
-			octagon = Octagon(identifier)
+			octagon = octagon_class(identifier)
 			connections.extend(octagon.connections)
 			row.append(octagon)
 			identifier += 1
