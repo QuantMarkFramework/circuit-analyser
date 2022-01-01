@@ -8,7 +8,9 @@ def big_hexagons(
 	qubits: int = 0,
 	n: int = 0,
 	aslist: bool = False,
-	exact: bool = False
+	exact: bool = False,
+	*args,
+	**kwargs
 ) -> Architecture:
 	"""
 	Creates a 2d grid with n * n hexagons that have 2 connection long sides.

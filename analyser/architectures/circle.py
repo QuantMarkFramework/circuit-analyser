@@ -3,7 +3,7 @@ from pytket.routing import Architecture
 from analyser.architectures import linear
 
 
-def circle(qubits: int, aslist: bool = False):
+def circle(qubits: int, aslist: bool = False, *args, **kwargs):
 	connections: typing.List[typing.Tuple[int, int]]
 	connections = linear(qubits, True)
 	connections.append((0, qubits - 1))

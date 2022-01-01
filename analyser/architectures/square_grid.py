@@ -8,7 +8,9 @@ def square_grid(
 	qubits: int = 0,
 	n: int = 0,
 	aslist: bool = False,
-	exact: bool = False
+	exact: bool = False,
+	*args,
+	**kwargs
 ) -> Architecture:
 	"""
 	Creates a n * n square grid with enough qubits. You can give qubit count or

@@ -8,7 +8,9 @@ def diamonds(
 	qubits: int = 0,
 	n: int = 0,
 	aslist: bool = False,
-	exact: bool = False
+	exact: bool = False,
+	*args,
+	**kwargs
 ) -> Architecture:
 	"""
 	Creates an architecture where the connections create diamonds in an 2

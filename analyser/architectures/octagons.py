@@ -29,7 +29,9 @@ def octagons(
 	qubits: int = 0,
 	n: int = 0,
 	aslist: bool = False,
-	exact: bool = False
+	exact: bool = False,
+	*args,
+	**kwargs
 ) -> Architecture:
 	"""
 	Creates octagons (like in Rigettis Apen-9) and connects them in a 2
