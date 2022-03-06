@@ -65,7 +65,7 @@ def create_pass(
 
 def analyse(
 	circuit,
-	architecture: typing.Union[Architecture, list(Architecture)] = None,
+	architecture: typing.Union[Architecture, typing.List[Architecture]] = None,
 	placement_type: str = "graph",
 	graph_placement_timeout: int = 120000,
 ):
