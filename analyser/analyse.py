@@ -6,6 +6,7 @@ from pytket.predicates import CompilationUnit, GateSetPredicate, ConnectivityPre
 from pytket.predicates import NoMidMeasurePredicate
 from pytket.circuit import OpType
 from functools import reduce
+import typing
 
 HAS_TEQUILA = True
 try:
@@ -43,7 +44,6 @@ def create_pass(
 	passes = [DecomposeBoxes(), RebaseTket(), FullPeepholeOptimise()]
 
 	if architecture:
-		print("wtf", type(architecture))
 		if not isinstance(placement_type, str):
 			raise ValueError("placement has to be given as 'graph' or 'linear'.")
 		elif placement_type.lower() == "graph":
@@ -65,7 +65,7 @@ def create_pass(
 
 def analyse(
 	circuit,
-	architecture: Architecture = None,
+	architecture: typing.Union[Architecture, list(Architecture)] = None,
 	placement_type: str = "graph",
 	graph_placement_timeout: int = 120000,
 ):
