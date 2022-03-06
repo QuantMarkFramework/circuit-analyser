@@ -1,5 +1,5 @@
 setuptools
 pytest
 flake8
-tequila-basic
+tequila-basic == 1.6.2
 pytket == 0.17.0
