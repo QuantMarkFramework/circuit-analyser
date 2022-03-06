@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-import tequila as tq
-from analyser.translate import tequila_to_tket
 from pytket.routing import Architecture, GraphPlacement, LinePlacement
 from pytket.passes import FullPeepholeOptimise, RebaseTket, RoutingPass, PlacementPass
 from pytket.passes import SequencePass, DecomposeBoxes, DelayMeasures, RemoveRedundancies
@@ -8,8 +6,13 @@ from pytket.predicates import CompilationUnit, GateSetPredicate, ConnectivityPre
 from pytket.predicates import NoMidMeasurePredicate
 from pytket.circuit import OpType
 from functools import reduce
-import random
-import numpy as np
+
+HAS_TEQUILA = True
+try:
+	import tequila as tq
+	from analyser.translate import tequila_to_tket
+except ImportError:
+	HAS_TEQUILA = False
 
 
 class AnalyseError(Exception):
@@ -21,7 +24,6 @@ class CircuitAnalytics:
 	qubit_count: int
 	gate_depth: int
 	gate_count: int
-	parameter_count: int
 
 
 def cx_counter(count, gate):
@@ -41,6 +43,7 @@ def create_pass(
 	passes = [DecomposeBoxes(), RebaseTket(), FullPeepholeOptimise()]
 
 	if architecture:
+		print("wtf", type(architecture))
 		if not isinstance(placement_type, str):
 			raise ValueError("placement has to be given as 'graph' or 'linear'.")
 		elif placement_type.lower() == "graph":
@@ -61,18 +64,14 @@ def create_pass(
 
 
 def analyse(
-	circuit: tq.QCircuit,
+	circuit,
 	architecture: Architecture = None,
-	give_values: bool = False,
 	placement_type: str = "graph",
 	graph_placement_timeout: int = 120000,
 ):
-	if not give_values:
-		tket_circuit = tequila_to_tket(circuit, compile=True)
-	if give_values:
-		variables = {v: random.uniform(0, 2 * np.pi) for v in circuit.extract_variables()}
-		tket_circuit = tequila_to_tket(circuit, variables, compile=True)
-	cu = CompilationUnit(tket_circuit)
+	if HAS_TEQUILA and isinstance(circuit, tq.QCircuit):
+		circuit = tequila_to_tket(circuit, compile=True)
+	cu = CompilationUnit(circuit)
 	create_pass(
 		architecture=architecture,
 		placement_type=placement_type,
@@ -88,6 +87,5 @@ def analyse(
 	return CircuitAnalytics(
 		qubit_count=outcome.n_qubits,
 		gate_depth=outcome.depth_by_type(OpType.CX),
-		gate_count=reduce(cx_counter, outcome, 0),
-		parameter_count=len(list(circuit.make_parameter_map().keys())),
+		gate_count=reduce(cx_counter, outcome, 0)
 	)

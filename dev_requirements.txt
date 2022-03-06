@@ -2,4 +2,4 @@ setuptools
 pytest
 flake8
 tequila-basic
-pytket
+pytket == 0.17.0

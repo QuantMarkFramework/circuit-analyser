@@ -1,23 +1,22 @@
 from random import randrange
-import tequila as tq
-from tequila.circuit.circuit import QCircuit
+from pytket import Circuit
 
 
-def random_CX_H_T_circuit(qubits: int, cnots: int) -> QCircuit:
+def random_CX_H_T_circuit(qubits: int, cnots: int) -> Circuit:
 	"""
-	Creates a circuit with random cnots that have a T or H before effected
+	Creates a circuit with random CNOTS that have a T or H before effected
 	qubits.
 
 	Uses random module for randomization.
 	"""
-	circuit: QCircuit = QCircuit()
+	circuit: Circuit = Circuit(qubits)
 	for _ in range(cnots):
 		target: int = randrange(0, qubits)
 		control: int = randrange(0, qubits - 1)
-		circuit += tq.gates.T(target) if randrange(0, 2) else tq.gates.H(target)
-		circuit += tq.gates.T(control) if randrange(0, 2) else tq.gates.H(control)
 		if control >= target:
 			control += 1
-		circuit += tq.gates.CX(control=control, target=target)
+		circuit.T(target) if randrange(0, 2) else circuit.H(target)
+		circuit.T(control) if randrange(0, 2) else circuit.H(control)
+		circuit.CX(control_qubit=control, target_qubit=target)
 
 	return circuit
