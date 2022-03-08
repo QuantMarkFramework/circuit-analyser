@@ -1,2 +1,2 @@
 setuptools
-pytket == 0.17.0
+pytket == 0.19.2
