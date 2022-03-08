@@ -27,21 +27,24 @@ class CircuitAnalytics:
 	gate_count: int
 
 
-def cx_counter(count, gate):
+def _cx_counter(count, gate):
 	if gate.op.type == OpType.CX:
 		return count + 1
 	return count
 
 
-def create_pass(
+FIRST_PASS = SequencePass([DecomposeBoxes(), RebaseTket(), FullPeepholeOptimise()])
+
+
+def _create_second_pass(
 	architecture: Architecture = None,
 	placement_type: str = "graph",
 	graph_placement_timeout: int = 120000,
 ):
 	"""
-	placement options "graph" "linear"
+	placement options are "graph" and "linear".
 	"""
-	passes = [DecomposeBoxes(), RebaseTket(), FullPeepholeOptimise()]
+	passes = []
 
 	if architecture:
 		if not isinstance(placement_type, str):
@@ -63,16 +66,13 @@ def create_pass(
 	return SequencePass(passes)
 
 
-def analyse(
-	circuit,
-	architecture: typing.Union[Architecture, typing.List[Architecture]] = None,
+def _apply_second_pass_and_measure(
+	cu,
+	architecture: Architecture = None,
 	placement_type: str = "graph",
 	graph_placement_timeout: int = 120000,
 ):
-	if HAS_TEQUILA and isinstance(circuit, tq.QCircuit):
-		circuit = tequila_to_tket(circuit, compile=True)
-	cu = CompilationUnit(circuit)
-	create_pass(
+	_create_second_pass(
 		architecture=architecture,
 		placement_type=placement_type,
 		graph_placement_timeout=graph_placement_timeout
@@ -87,5 +87,32 @@ def analyse(
 	return CircuitAnalytics(
 		qubit_count=outcome.n_qubits,
 		gate_depth=outcome.depth_by_type(OpType.CX),
-		gate_count=reduce(cx_counter, outcome, 0)
+		gate_count=reduce(_cx_counter, outcome, 0)
+	)
+
+
+def analyse(
+	circuit,
+	architecture: typing.Union[Architecture, typing.List[Architecture]] = None,
+	placement_type: str = "graph",
+	graph_placement_timeout: int = 120000,
+):
+	if HAS_TEQUILA and isinstance(circuit, tq.QCircuit):
+		circuit = tequila_to_tket(circuit, compile=True)
+	cu = CompilationUnit(circuit)
+	FIRST_PASS.apply(cu)
+
+	if isinstance(architecture, list):
+		circuit2 = cu.circuit
+		return [_apply_second_pass_and_measure(
+			CompilationUnit(circuit2),
+			architecture=arc,
+			placement_type=placement_type,
+			graph_placement_timeout=graph_placement_timeout
+		) for arc in architecture]
+	return _apply_second_pass_and_measure(
+		cu,
+		architecture=architecture,
+		placement_type=placement_type,
+		graph_placement_timeout=graph_placement_timeout
 	)
