@@ -5,6 +5,7 @@ from pytket.routing import Architecture
 def stack(
 	layer: typing.List[typing.Tuple[int, int]],
 	height: int,
+	connection_nodes: typing.List[int] = [],
 	aslist: bool = False,
 	*args,
 	**kwargs
@@ -23,6 +24,9 @@ def stack(
 			if node > max_node:
 				max_node = node
 	offset = max_node - min_node + 1
+
+	if connection_nodes:
+		node_set = set(connection_nodes)
 
 	connections: typing.List[typing.Tuple[int, int]] = layer.copy()
 	for level in range(1, height):

@@ -19,7 +19,7 @@ def qbits_to_connections(
 	Adds qubits along all connections.
 	"""
 	if qbits_per_connections < 1:
-		raise TypeError("qbits_per_connections needs to be a integer that is 1 or bigger.") 
+		raise TypeError("qbits_per_connections needs to be a integer that is 1 or bigger.")
 
 	max_node = float("-inf")
 	for connection in original:
