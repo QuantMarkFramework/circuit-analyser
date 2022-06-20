@@ -12,9 +12,6 @@ def stack(
 	"""
 	Stacks a architecture.
 	"""
-	if not layer:
-		raise TypeError("Layer needs to have connections.")
-
 	min_node = float("inf")
 	max_node = float("-inf")
 	node_set = set(())

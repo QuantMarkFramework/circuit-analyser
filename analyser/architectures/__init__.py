@@ -6,3 +6,4 @@ from analyser.architectures.square_grid import square_grid
 from analyser.architectures.circle import circle
 from analyser.architectures.big_hexagons import big_hexagons
 from analyser.architectures.stack import stack
+from analyser.architectures.qbits_to_connections import qbits_to_connections
