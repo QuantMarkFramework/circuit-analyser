@@ -2,9 +2,9 @@ import typing
 from pytket.routing import Architecture
 
 
-def qbits_to_connections(
+def qubits_to_connections(
 	original: typing.List[typing.Tuple[int, int]],
-	qbits_per_connections: int = 1,
+	qubits_per_connections: int = 1,
 	aslist: bool = False,
 	return_new: bool = False,
 	*args,
@@ -18,8 +18,8 @@ def qbits_to_connections(
 	"""
 	Adds qubits along all connections.
 	"""
-	if qbits_per_connections < 1:
-		raise TypeError("qbits_per_connections needs to be a integer that is 1 or bigger.")
+	if qubits_per_connections < 1:
+		raise TypeError("qubits_per_connections needs to be a integer that is 1 or bigger.")
 
 	max_node = float("-inf")
 	for connection in original:
@@ -28,7 +28,7 @@ def qbits_to_connections(
 				max_node = node
 
 	new_node = max_node + 1
-	n = qbits_per_connections
+	n = qubits_per_connections
 	connections: typing.List[typing.Tuple[int, int]] = []
 	for connection in original:
 		connections.append((connection[0], new_node))

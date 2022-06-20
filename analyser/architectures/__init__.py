@@ -1,3 +1,4 @@
+from sympy import im
 from analyser.architectures.linear import linear
 from analyser.architectures.fully_connected import fully_connected
 from analyser.architectures.octagons import octagons
@@ -6,4 +7,4 @@ from analyser.architectures.square_grid import square_grid
 from analyser.architectures.circle import circle
 from analyser.architectures.big_hexagons import big_hexagons
 from analyser.architectures.stack import stack
-from analyser.architectures.qbits_to_connections import qbits_to_connections
+from analyser.architectures.qubits_to_connections import qubits_to_connections
