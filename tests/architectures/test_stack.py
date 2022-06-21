@@ -32,3 +32,26 @@ class TestStack(unittest.TestCase):
 			sorted(stack(l1, 2, [1, 3], aslist=True)),
 			sorted(con)
 		)
+
+	def test_qubit_on_connections(self):
+		l1 = [(0, 1), (1, 2), (2, 3), (3, 0)]
+		c1 = [(0, 4), (1, 5), (2, 6), (3, 7)]
+		c2 = [(4, 8), (5, 9), (6, 10), (7, 11)]
+		l2 = [(8, 9), (9, 10), (10, 11), (11, 8)]
+		con = [*l1, *c1, *c2, *l2]
+		self.assertEqual(
+			sorted(stack(l1, 2, qubits_on_connections=1, aslist=True)),
+			sorted(con)
+		)
+
+	def test_2_qubits_on_connections(self):
+		l1 = [(0, 1), (1, 2)]
+		c1 = [(0, 3), (3, 4), (4, 9)]
+		c2 = [(1, 5), (5, 6), (6, 10)]
+		c3 = [(2, 7), (7, 8), (8, 11)]
+		l2 = [(9, 10), (10, 11)]
+		con = [*l1, *c1, *c2, *c3, *l2]
+		self.assertEqual(
+			sorted(stack(l1, 2, qubits_on_connections=2, aslist=True)),
+			sorted(con)
+		)

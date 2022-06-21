@@ -28,11 +28,10 @@ def qubits_to_connections(
 				max_node = node
 
 	new_node = max_node + 1
-	n = qubits_per_connections
 	connections: typing.List[typing.Tuple[int, int]] = []
 	for connection in original:
 		connections.append((connection[0], new_node))
-		for _ in range(1, n):
+		for _ in range(1, qubits_per_connections):
 			new_node += 1
 			connections.append((new_node - 1, new_node))
 		connections.append((new_node, connection[1]))
