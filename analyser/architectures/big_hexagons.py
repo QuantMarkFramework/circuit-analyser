@@ -1,5 +1,5 @@
 import typing
-from pytket.routing import Architecture
+from pytket.architecture import Architecture
 from analyser.architectures._common_parts import test_input, exact_qubit_count
 import math
 

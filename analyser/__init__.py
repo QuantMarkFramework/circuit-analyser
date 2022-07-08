@@ -1,1 +1,1 @@
-from analyser.analyse import analyse
+from analyser.analyser import PytketAnalyzer

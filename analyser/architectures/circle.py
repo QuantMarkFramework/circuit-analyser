@@ -1,5 +1,5 @@
 import typing
-from pytket.routing import Architecture
+from pytket.architecture import Architecture
 from analyser.architectures import linear
 
 

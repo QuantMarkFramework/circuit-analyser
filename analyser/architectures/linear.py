@@ -1,5 +1,5 @@
 import typing
-from pytket.routing import Architecture
+from pytket.architecture import Architecture
 
 
 def linear(qubits: int, aslist: bool = False, *args, **kwargs):

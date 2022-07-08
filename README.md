@@ -1,26 +1,55 @@
 # circuit-analyser
-A python library for analysing quantum circuits.
+A python library for analysing quantum circuits and architectures.
 
-# This library is not yet ready to be used.
+# This library is work in progress.
 
-## Example
+## Example of comparing architectures.
 ```python
-from analyser import analyse
-import tequila as tq
+from analyser.extra import random_CX_H_T_circuit
+from analyser import PytketAnalyzer
+from analyser.architectures import big_hexagons, square_grid, fully_connected
+from analyser.architectures import qubits_to_connections, stack
+import math
 
-mol = tq.Molecule(
-	geometry="H 0.0 0.0 0\nO 0 0 1\nH 0 0 2",
-	basis_set="cc-pVTZ",
-	transformation="JORDANWIGNER"
-)
+qubit_counts = range(20, 60, 20)
+n = 2
+placement = "linear"
 
-U = mol.make_upccgsd_ansatz()
 
-print("upccgsd")
-print(analyse(U))
+def qubes(qubits=0, n=0, aslist=False):
+	if not n:
+		n = math.ceil(qubits ** (1 / 3) - 1)
+	arc = square_grid(n=n + 1, aslist=True)
+	return stack(arc, n + 1, aslist=aslist)
 
-U2 = mol.make_uccsd_ansatz(trotter_steps=1)
 
-print("uccsd")
-print(analyse(U2, give_values=True))
+def big_qubes(qubits):
+	root = (8 * qubits + 4 * math.sqrt(qubits * (4 * qubits + 1)) + 1) ** (1 / 3)
+	n = math.ceil((root + 1 / root - 3) / 4)
+	arc = qubes(n=n, aslist=True)
+	return qubits_to_connections(arc)
+
+
+arcfs = [fully_connected, big_hexagons, square_grid, qubes, big_qubes]
+
+headers = ["qubits"]
+for arc in ["fully_connected", "big_hexagons", "square_grid", "qubes", "big_qubes"]:
+	headers.append(arc + "_depth")
+	headers.append(arc + "_count")
+print(",".join(headers))
+
+analyzer = PytketAnalyzer(placement)
+for qubits in qubit_counts:
+	cnots = qubits * 10
+	arcs = [f(qubits) for f in arcfs]
+	for _ in range(n):
+		circ = random_CX_H_T_circuit(qubits=qubits, cnots=cnots)
+		res = analyzer.analyse(
+			circ,
+			architecture=arcs,
+		)
+		print(qubits, end="")
+		for r in res:
+			print(",", r.gate_depth, ",", r.gate_count, sep="", end="")
+		print()
 ```
