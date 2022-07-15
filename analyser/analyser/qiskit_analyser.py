@@ -1,21 +1,12 @@
 from analyser.analyser.analyser import Analyser
 from analyser.architectures.two_directional import two_directional
-
-
-QISKIT = True
-try:
-	from qiskit import QuantumCircuit
-	from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
-	from qiskit.transpiler import CouplingMap
-except ImportError:
-	QISKIT = False
+from qiskit import QuantumCircuit
+from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
+from qiskit.transpiler import CouplingMap
 
 
 class QiskitAnalyzer(Analyser):
 	def __init__(self, routing_method=None, optimization_level=3):
-		if not QISKIT:
-			raise ImportError("Library 'qiskit' is needed to use QiskitAnalyzer.")
-
 		self.routing_method = routing_method
 		self.optimization_level = optimization_level
 		self.basis_gates = ["u1", "u2", "u3", "cx"]

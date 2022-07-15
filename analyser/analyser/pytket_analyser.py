@@ -1,17 +1,11 @@
 from functools import reduce
 from analyser.analyser.analyser import Analyser
-
-
-PYTKET = True
-try:
-	from pytket.circuit import OpType
-	from pytket.predicates import CompilationUnit
-	from pytket.passes import FullPeepholeOptimise, RebaseTket, RoutingPass, PlacementPass
-	from pytket.passes import SequencePass, DecomposeBoxes, DelayMeasures, RemoveRedundancies
-	from pytket.placement import GraphPlacement, LinePlacement
-	from pytket.architecture import Architecture
-except ImportError:
-	PYTKET = False
+from pytket.circuit import OpType
+from pytket.predicates import CompilationUnit
+from pytket.passes import FullPeepholeOptimise, RebaseTket, RoutingPass, PlacementPass
+from pytket.passes import SequencePass, DecomposeBoxes, DelayMeasures, RemoveRedundancies
+from pytket.placement import GraphPlacement, LinePlacement
+from pytket.architecture import Architecture
 
 
 def _cx_counter(count, gate):
@@ -22,9 +16,6 @@ def _cx_counter(count, gate):
 
 class PytketAnalyzer(Analyser):
 	def __init__(self, placement_type: str = "linear"):
-		if not PYTKET:
-			raise ImportError("Library 'pytket' is needed to use PytketAnalyzer.")
-
 		if not isinstance(placement_type, str):
 			raise ValueError("placement has to be given as 'graph' or 'linear'.")
 		elif placement_type.lower() == "graph":
