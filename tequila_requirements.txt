@@ -1,3 +1,4 @@
 setuptools
 tequila-basic == 1.6.2
-pytket == 0.19.2
+pytket == 1.3.0
+qiskit == 0.37.0
