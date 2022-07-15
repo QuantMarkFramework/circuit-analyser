@@ -1,13 +1,9 @@
 import typing
-from pytket.architecture import Architecture
 
 
-def linear(qubits: int, aslist: bool = False, *args, **kwargs):
-	connections: typing.List[typing.Tuple[int, int]] = []
+def linear(qubits: int, *args, **kwargs) -> typing.List[typing.List[int]]:
+	connections: typing.List[typing.List[int]] = []
 	for i in range(qubits - 1):
-		connections.append((i, i + 1))
+		connections.append([i, i + 1])
 
-	if aslist:
-		return connections
-
-	return Architecture(connections)
+	return connections

@@ -1,30 +1,24 @@
 import typing
-from pytket.architecture import Architecture
-from analyser.architectures._common_parts import test_input, exact_qubit_count
+from analyser.architectures._common_parts import test_input
 import math
 
 
 def hexagons(
 	qubits: int = 0,
 	n: int = 0,
-	aslist: bool = False,
-	exact: bool = False,
 	*args,
 	**kwargs
-) -> Architecture:
+) -> typing.List[typing.List[int]]:
 	"""
 	Creates a 2d grid with n * n hexagons that have.
 	n is selected so that there are enough qubits. You can give qubit count or n
 	as a parameter.
 
-	When exact is used, qubits are removed from one side, till the exact qubit
-	count is achieved.
-
 	This is similar to the heavy-hex architecture that is used by IBM, but does
 	not have extrea qubits on the hexagon sides.
 	"""
-	test_input(qubits, n, exact)
-	connections: typing.List[typing.Tuple[int, int]] = []
+	test_input(qubits, n)
+	connections: typing.List[typing.List[int]] = []
 	if qubits:
 		n: int = math.ceil(-1 + math.sqrt(1 + qubits / 2))
 
@@ -36,7 +30,7 @@ def hexagons(
 	# horizontal
 	for i in range(_qubits - 1):
 		if ((i - 2 * n) % (2 * n + 2)):
-			connections.append((i, i + 1))
+			connections.append([i, i + 1])
 
 	# vertical
 	increment = 2 * n + 2
@@ -49,12 +43,6 @@ def hexagons(
 		# in some cases last row is "missing" first element
 		if ((n > 1) and (n % 2) and ((first + increment) == (_qubits - (2 * n)))):
 			increment -= 1
-		connections.append((first, first + increment))
+		connections.append([first, first + increment])
 
-	if exact:
-		connections = exact_qubit_count(qubits, connections)
-
-	if aslist:
-		return connections
-
-	return Architecture(connections)
+	return connections

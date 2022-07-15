@@ -1,1 +1,2 @@
 from analyser.analyser.pytket_analyser import PytketAnalyzer
+from analyser.analyser.qiskit_analyser import QiskitAnalyzer

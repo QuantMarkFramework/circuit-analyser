@@ -16,17 +16,17 @@ n = 2
 placement = "linear"
 
 
-def qubes(qubits=0, n=0, aslist=False):
+def qubes(qubits=0, n=0):
 	if not n:
 		n = math.ceil(qubits ** (1 / 3) - 1)
-	arc = square_grid(n=n + 1, aslist=True)
-	return stack(arc, n + 1, aslist=aslist)
+	arc = square_grid(n=n + 1)
+	return stack(arc, n + 1)
 
 
 def big_qubes(qubits):
 	root = (8 * qubits + 4 * math.sqrt(qubits * (4 * qubits + 1)) + 1) ** (1 / 3)
 	n = math.ceil((root + 1 / root - 3) / 4)
-	arc = qubes(n=n, aslist=True)
+	arc = qubes(n=n)
 	return qubits_to_connections(arc)
 
 

@@ -1,19 +1,15 @@
 import typing
-from pytket.architecture import Architecture
 
 
 def qubits_to_connections(
-	original: typing.List[typing.Tuple[int, int]],
+	original: typing.List[typing.List[int]],
 	qubits_per_connections: int = 1,
-	aslist: bool = False,
 	return_new: bool = False,
 	*args,
 	**kwargs
 ) -> typing.Union[
-	Architecture,
-	typing.List[typing.Tuple[int, int]],
-	typing.Tuple[Architecture, typing.List[int]],
-	typing.Tuple[typing.List[typing.Tuple[int, int]], typing.List[int]]
+	typing.List[typing.List[int]],
+	typing.Tuple[typing.List[typing.List[int]], typing.List[int]]
 ]:
 	"""
 	Adds qubits along all connections.
@@ -28,17 +24,14 @@ def qubits_to_connections(
 				max_node = node
 
 	new_node = max_node + 1
-	connections: typing.List[typing.Tuple[int, int]] = []
+	connections: typing.List[typing.List[int]] = []
 	for connection in original:
-		connections.append((connection[0], new_node))
+		connections.append([connection[0], new_node])
 		for _ in range(1, qubits_per_connections):
 			new_node += 1
-			connections.append((new_node - 1, new_node))
-		connections.append((new_node, connection[1]))
+			connections.append([new_node - 1, new_node])
+		connections.append([new_node, connection[1]])
 		new_node += 1
-
-	if not aslist:
-		connections = Architecture(connections)
 
 	if return_new:
 		return (connections, list(range(max_node + 1, new_node)))

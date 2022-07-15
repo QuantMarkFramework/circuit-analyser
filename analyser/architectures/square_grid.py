@@ -1,17 +1,14 @@
 import typing
-from pytket.architecture import Architecture
-from analyser.architectures._common_parts import test_input, exact_qubit_count
+from analyser.architectures._common_parts import test_input
 import math
 
 
 def square_grid(
 	qubits: int = 0,
 	n: int = 0,
-	aslist: bool = False,
-	exact: bool = False,
 	*args,
 	**kwargs
-) -> Architecture:
+) -> typing.List[typing.List[int]]:
 	"""
 	Creates a n * n square grid with enough qubits. You can give qubit count or
 	n as a parameter.
@@ -19,24 +16,18 @@ def square_grid(
 	When exact is used, qubits are removed from one side, till the exact qubit
 	count is achieved.
 	"""
-	test_input(qubits, n, exact)
-	connections: typing.List[typing.Tuple[int, int]] = []
+	test_input(qubits, n)
+	connections: typing.List[typing.List[int]] = []
 	if qubits:
-		n = math.ceil(math.sqrt(qubits))
+		n = math.ceil(math.sqrt(qubits) - 1)
 
-	for i in range(n - 1):
-		connections.append((i, i + 1))
-	for row in range(1, n):
-		offset: int = row * n
-		for i in range(n - 1):
-			connections.append((offset + i, offset + i + 1))
-			connections.append((offset + i - n, offset + i))
-		connections.append((offset - 1, offset + n - 1))
+	for i in range(n):
+		connections.append([i, i + 1])
+	for row in range(1, n + 1):
+		offset: int = row * (n + 1)
+		for i in range(n):
+			connections.append([offset + i, offset + i + 1])
+			connections.append([offset + i - n - 1, offset + i])
+		connections.append([offset - 1, offset + n])
 
-	if exact:
-		connections = exact_qubit_count(qubits, connections)
-
-	if aslist:
-		return connections
-
-	return Architecture(connections)
+	return connections
