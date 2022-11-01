@@ -9,3 +9,4 @@ from analyser.architectures.big_hexagons import big_hexagons
 from analyser.architectures.stack import stack
 from analyser.architectures.qubits_to_connections import qubits_to_connections
 from analyser.architectures.hexagons import hexagons
+from analyser.architectures.minimum_viable import minimum_viable
