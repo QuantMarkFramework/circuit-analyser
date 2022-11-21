@@ -4,6 +4,7 @@ from pytket.circuit import OpType
 from pytket.predicates import CompilationUnit
 from pytket.passes import FullPeepholeOptimise, RebaseTket, RoutingPass, PlacementPass
 from pytket.passes import SequencePass, DecomposeBoxes, DelayMeasures, RemoveRedundancies
+from pytket.passes import DecomposeSwapsToCXs
 from pytket.placement import GraphPlacement, LinePlacement
 from pytket.architecture import Architecture
 
@@ -42,7 +43,11 @@ class PytketAnalyzer(Analyser):
 	def _routing(self, circuit, architecture):
 		architecture = Architecture(architecture)
 		cu = CompilationUnit(circuit)
-		SequencePass([PlacementPass(self.placement(architecture)), RoutingPass(architecture)]).apply(cu)
+		SequencePass([
+			PlacementPass(self.placement(architecture)),
+			RoutingPass(architecture),
+			DecomposeSwapsToCXs(architecture),
+		]).apply(cu)
 		return cu.circuit
 
 	def _post_routing_optimization(self, circuit):
