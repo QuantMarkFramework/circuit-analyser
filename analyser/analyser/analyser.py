@@ -44,6 +44,6 @@ class Analyser(ABC):
 		circuit = self._pre_routing_optimization(circuit)
 
 		if isinstance(architecture, list):
-			return [self._routing_and_measuring(circuit, arc) for arc in architecture]
+			return [self._routing_and_measuring(circuit.copy(), arc) for arc in architecture]
 
 		return self._routing_and_measuring(circuit, architecture)
