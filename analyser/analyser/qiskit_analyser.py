@@ -6,7 +6,8 @@ from qiskit.transpiler import CouplingMap
 
 
 class QiskitAnalyzer(Analyser):
-	def __init__(self, routing_method=None, optimization_level=3):
+	def __init__(self, routing_method=None, optimization_level=3, ignore_errors=False):
+		super().__init__(ignore_errors=ignore_errors)
 		self.routing_method = routing_method
 		if self.routing_method == "None":
 			self.routing_method = None
@@ -38,4 +39,3 @@ class QiskitAnalyzer(Analyser):
 
 	def _post_routing_optimization(self, circuit):
 		return circuit
-

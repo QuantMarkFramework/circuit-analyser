@@ -16,7 +16,8 @@ def _cx_counter(count, gate):
 
 
 class PytketAnalyzer(Analyser):
-	def __init__(self, placement_type: str = "linear"):
+	def __init__(self, placement_type: str = "linear", ignore_errors=False):
+		super().__init__(ignore_errors=ignore_errors)
 		if not isinstance(placement_type, str):
 			raise ValueError("placement has to be given as 'graph' or 'linear'.")
 		elif placement_type.lower() == "graph":
