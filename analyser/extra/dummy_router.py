@@ -3,10 +3,15 @@ from qiskit import QuantumCircuit
 import networkx as nx
 import operator
 import warnings
+from math import ceil, floor
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-def dummy_router(circuit: QuantumCircuit, connections: list):
+def dummy_router(
+	circuit: QuantumCircuit,
+	connections: list,
+	two_way_approach: bool = True
+):
 	n_qubits = len(circuit.qubits)
 	graph = nx.Graph(connections)
 	n_real_qubits = len(graph.nodes())
@@ -29,32 +34,29 @@ def dummy_router(circuit: QuantumCircuit, connections: list):
 
 		qubit_map = {v: k for k, v in inv_q_map.items()}
 		path = nx.shortest_path(graph, inv_q_map[qubits[0]], inv_q_map[qubits[1]])
-		for i in range(len(path) - 2):
-			new_circuit.cx(path[i], path[i + 1])
-			new_circuit.cx(path[i + 1], path[i])
-			new_circuit.cx(path[i], path[i + 1])
 
-			current_q_1 = qubit_map[path[i]]
-			current_q_2 = qubit_map[path[i + 1]]
-			qubit_map[path[i]] = current_q_2
-			qubit_map[path[i + 1]] = current_q_1
+		if two_way_approach:
+			for i in range(ceil(len(path) / 2) - 1):
+				_insert_swap(new_circuit, qubit_map, path[i], path[i + 1])
+
+			for i in range(floor(len(path) / 2) - 1):
+				_insert_swap(new_circuit, qubit_map, path[-1 - i], path[-2 - i])
+		else:
+			for i in range(len(path) - 2):
+				_insert_swap(new_circuit, qubit_map, path[i], path[i + 1])
 
 		inv_q_map = {v: k for k, v in qubit_map.items()}
 		target_qubits = [inv_q_map[qubit] for qubit in qubits]
 		new_circuit.append(instruction.operation, target_qubits)
-
 	return new_circuit, {v: k for k, v in inv_q_map.items()}
 
-	
-# from analyser.extra import random_CX_circuit
-# from analyser.architectures import square_grid, minimum_viable
-# import time
-# qubits = 200
-# arc = minimum_viable(square_grid, qubits)
-# circ = random_CX_circuit(qubits, qubits * 10, "qiskit")
-# print("start")
-# start = time.time()
-# routed, q_map = dummy_router(circ, arc)
-# end = time.time()
-# print("runtime:", end - start)
-# print(q_map)
+
+def _insert_swap(new_circuit, qubit_map, q1, q2):
+	new_circuit.cx(q1, q2)
+	new_circuit.cx(q2, q1)
+	new_circuit.cx(q1, q2)
+
+	current_q_1 = qubit_map[q1]
+	current_q_2 = qubit_map[q2]
+	qubit_map[q1] = current_q_2
+	qubit_map[q2] = current_q_1
