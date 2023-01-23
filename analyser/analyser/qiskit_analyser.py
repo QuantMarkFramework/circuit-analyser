@@ -5,7 +5,7 @@ from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 from qiskit.transpiler import CouplingMap
 
 
-class QiskitAnalyzer(Analyser):
+class QiskitAnalyser(Analyser):
 	def __init__(self, routing_method=None, optimization_level=3, ignore_errors=False):
 		super().__init__(ignore_errors=ignore_errors)
 		self.routing_method = routing_method

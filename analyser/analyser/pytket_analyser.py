@@ -15,7 +15,7 @@ def _cx_counter(count, gate):
 	return count
 
 
-class PytketAnalyzer(Analyser):
+class PytketAnalyser(Analyser):
 	def __init__(self, placement_type: str = "linear", ignore_errors=False):
 		super().__init__(ignore_errors=ignore_errors)
 		if not isinstance(placement_type, str):
