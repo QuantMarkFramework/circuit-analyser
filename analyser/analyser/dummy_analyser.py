@@ -17,7 +17,7 @@ class DummyAnalyser(Analyser):
 		return circuit
 
 	def _routing(self, circuit: QuantumCircuit, architecture):
-		return dummy_router(circuit, architecture)
+		return dummy_router(circuit, architecture)[0]
 
 	def _post_routing_optimization(self, circuit):
 		return circuit
