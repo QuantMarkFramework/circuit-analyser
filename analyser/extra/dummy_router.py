@@ -1,7 +1,6 @@
 # %%
 from qiskit import QuantumCircuit
 import networkx as nx
-import operator
 import warnings
 from math import ceil, floor
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -12,16 +11,14 @@ def dummy_router(
 	connections: list,
 	two_way_approach: bool = True
 ):
-	n_qubits = len(circuit.qubits)
 	graph = nx.Graph(connections)
 	n_real_qubits = len(graph.nodes())
-	while (graph.number_of_nodes() > n_qubits):
-		asdict = dict(nx.all_pairs_shortest_path_length(graph))
-		sums = {k: sum(v.values()) for k, v in asdict.items()}
-		out = max(sums.items(), key=operator.itemgetter(1))[0]
-		graph.remove_node(out)
-	inv_q_map = {i: node for i, node in enumerate(graph.nodes())}  # format "fake:real"
+	paths = {}
+
+	nodes = list(nx.single_source_shortest_path_length(graph, list(graph)[0]))
+	inv_q_map = {i: node for i, node in enumerate(nodes)}  # format "fake:real"
 	new_circuit = QuantumCircuit(n_real_qubits)
+
 	for instruction in list(circuit):
 		if instruction.operation.num_qubits > 2:
 			raise ValueError("Dummy compiler does not support gates with more than 2 qubits.")
@@ -33,7 +30,15 @@ def dummy_router(
 			continue
 
 		qubit_map = {v: k for k, v in inv_q_map.items()}
-		path = nx.shortest_path(graph, inv_q_map[qubits[0]], inv_q_map[qubits[1]])
+		first = inv_q_map[qubits[0]]
+		last = inv_q_map[qubits[1]]
+		name = f'{first},{last}'
+		if name in paths:
+			path = paths[name]
+		else:
+			path = nx.shortest_path(graph, inv_q_map[qubits[0]], inv_q_map[qubits[1]])
+			paths[name] = path
+			paths[f'{last},{first}'] = path[::-1]
 
 		if two_way_approach:
 			for i in range(ceil(len(path) / 2) - 1):

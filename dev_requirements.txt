@@ -1,5 +1,5 @@
 setuptools
 pytest
 flake8
-pytket == 1.8.1
-qiskit == 0.39.2
+pytket == 1.10.0
+qiskit == 0.39.5

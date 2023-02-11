@@ -3,13 +3,14 @@ from analyser.architectures import octagons, hexagons, minimum_viable, qubits_to
 from analyser.extra import random_CX_circuit
 from analyser.analyser import PytketAnalyser, QiskitAnalyser, DummyAnalyser
 import random
+import sys
 
 
 # Parameters
 lattice_qubit_count = 500
-biggest_qubit_count = 40
-runs = 2
-random_seed = 69
+biggest_qubit_count = int(sys.argv[1])
+runs = int(sys.argv[2])
+random_seed = int(sys.argv[3])
 
 dummy_method = ["dummy"]
 qiskit_methods = ["None"]

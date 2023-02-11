@@ -7,3 +7,5 @@ sandbox2
 *.out
 *.hdf5
 *.clean
+*.sh
+*.csv
